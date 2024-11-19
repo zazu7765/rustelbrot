@@ -23,7 +23,7 @@ fn iter_to_exit(c: Complex<f64>, threshold: usize) -> Option<usize> {
 pub mod parse {
     use std::str::FromStr;
 
-    use num_complex::{Complex, Complex64};
+    use num_complex::Complex64;
 
     /// generic parse from str into type, with separator
     ///
@@ -60,7 +60,7 @@ pub mod parse {
         assert_eq!(parse_complex("1.75x,-0.075x"), None);
         assert_eq!(
             parse_complex("1.75,-0.075"),
-            Some(Complex {
+            Some(Complex64 {
                 re: 1.75,
                 im: -0.075
             })
@@ -71,7 +71,7 @@ pub mod parse {
 pub mod img {
     use std::{fs::File, io::BufWriter};
 
-    use num_complex::{Complex, Complex64};
+    use num_complex::Complex64;
 
     use crate::util::iter_to_exit;
 
@@ -85,7 +85,7 @@ pub mod img {
     ) -> Complex64 {
         let (w, h) = (lr.re - ul.re, ul.im - lr.im);
 
-        Complex {
+        Complex64 {
             re: ul.re + pixel.0 as f64 * w / bounds.0 as f64,
             im: ul.im - pixel.1 as f64 * h / bounds.1 as f64,
         }
@@ -97,10 +97,10 @@ pub mod img {
             map_px_to_pt(
                 (100, 200),
                 (25, 175),
-                Complex { re: -1.0, im: 1.0 },
-                Complex { re: 1.0, im: -1.0 }
+                Complex64 { re: -1.0, im: 1.0 },
+                Complex64 { re: 1.0, im: -1.0 }
             ),
-            Complex {
+            Complex64 {
                 re: -0.5,
                 im: -0.75
             }
@@ -125,17 +125,17 @@ pub mod img {
 
     /// writes a buffer of pixels to an image
     pub fn write(fname: &str, pixels: &[u8], bounds: (usize, usize)) -> Result<(), std::io::Error> {
-        let outFile = File::create(fname)?;
+        let out_file = File::create(fname)?;
 
-        let ref mut w = BufWriter::new(outFile);
+        let ref mut w = BufWriter::new(out_file);
 
         let mut encoder = png::Encoder::new(w, bounds.0 as u32, bounds.1 as u32);
 
         encoder.set_color(png::ColorType::Grayscale);
 
-        let mut imageWriter = encoder.write_header().unwrap();
+        let mut image_writer = encoder.write_header().unwrap();
 
-        imageWriter.write_image_data(&pixels).unwrap();
+        image_writer.write_image_data(&pixels).unwrap();
 
         Ok(())
     }
