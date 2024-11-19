@@ -15,22 +15,35 @@ fn main() {
             "Usage: {} <file> <PIXELSxPIXELS> <upper_left> <lower_right> <threads>",
             args[0]
         );
+        eprintln!("Example args: test.png 4000x3000 -1.20,0.35 -1,0.20 32");
         std::process::exit(1);
     }
 
     let bounds = parse_pair(&args[2], 'x')
-    .expect("Bad Image Dimensions");
+    .unwrap_or_else(||{
+        eprintln!("Bad image dimensions");
+        std::process::exit(1);
+    }
+    );
 
     let ul = parse_complex(&args[3])
-    .expect("Bad Upper Left Corner Point");
+    .unwrap_or_else(||{
+        eprintln!("Bad Upper Left Corner Point");
+        std::process::exit(1);
+    }
+    );
 
     let lr = parse_complex(&args[4])
-    .expect("Bad Lower Right Corner Point");
-
-    let mut px = vec![0; bounds.0 * bounds.1];
+    .unwrap_or_else(||{
+        eprintln!("Bad Lower Right Corner Point");
+        std::process::exit(1);
+    }
+    );
 
     let threads = args[5].parse::<usize>()
-    .expect("Bad Thread Count");
+    .unwrap_or(1);    
+
+    let mut px = vec![0; bounds.0 * bounds.1];
 
     let rows_per_band = bounds.1 / threads + 1;
 
