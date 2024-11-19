@@ -5,7 +5,7 @@
 
 ## Installation
 
-Build using your local rust installation
+Build using your local rust installation 
 
 ```bash
 git clone https://github.com/zazu7765/rustelbrot.git
@@ -14,6 +14,8 @@ cd rustelbrot
 
 cargo build --release
 ```
+
+or grab a binary from [Releases](https://github.com/zazu7765/rustelbrot/releases) if it is available
 
 ## Usage
 
